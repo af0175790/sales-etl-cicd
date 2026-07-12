@@ -1,0 +1,41 @@
+# databricks.yml
+# Bundle definition for the Sales ETL CI/CD demo.
+# Written for Databricks FREE EDITION: single workspace, serverless compute only,
+# no service principals — auth is via a personal access token (PAT).
+
+bundle:
+  name: sales_etl_cicd
+
+variables:
+  catalog:
+    description: Unity Catalog catalog to write tables into
+    default: workspace
+  schema:
+    description: Schema (dev vs prod live side-by-side in the same catalog)
+    default: sales_dev
+  raw_path:
+    description: Path to the raw CSV (Unity Catalog volume)
+    default: /Volumes/workspace/sales_dev/raw_files/sales_raw_sample.csv
+
+include:
+  - resources/*.yml
+
+targets:
+  dev:
+    mode: development
+    default: true
+    # source_linked_deployment lets the job run directly against your
+    # uncommitted workspace files while you're iterating (Free Edition
+    # supports this in the Git folder / workspace bundle UI too).
+    presets:
+      source_linked_deployment: true
+
+  prod:
+    mode: production
+    variables:
+      schema: sales_prod
+    # In a paid account, prod normally points at a SEPARATE workspace host.
+    # Free Edition only gives you one workspace, so "prod" here just means
+    # a different Unity Catalog schema, deployed only from the main branch.
+    run_as:
+      user_name: ${workspace.current_user.userName}
