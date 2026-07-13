@@ -9,13 +9,13 @@ bundle:
 variables:
   catalog:
     description: Unity Catalog catalog to write tables into
-    default: workspace
+    default: sales_dev
   schema:
     description: Schema (dev vs prod live side-by-side in the same catalog)
     default: sales_dev
   raw_path:
     description: Path to the raw CSV (Unity Catalog volume)
-    default: /Volumes/workspace/sales_dev/raw_files/sales_raw_sample.csv
+    default: /Volumes/sales_dev/sales_dev/raw_files/sales_raw_sample.csv
 
 include:
   - resources/*.yml
