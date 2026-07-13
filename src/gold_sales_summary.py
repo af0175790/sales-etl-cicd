@@ -16,6 +16,7 @@ if _IN_DATABRICKS:
     catalog = dbutils.widgets.get("catalog")
     schema = dbutils.widgets.get("schema")
 
+    # Testing CI/CD pipeline trigger
     # COMMAND ----------
 
     silver_df = spark.table(f"{catalog}.{schema}.silver_sales")
@@ -39,3 +40,25 @@ if _IN_DATABRICKS:
 
     print(f"Gold table written: {catalog}.{schema}.gold_sales_summary ({gold_df.count()} rows)")
     display(gold_df)
+
+# COMMAND ----------
+
+    # New: platform-wise total revenue summary (across all cities)
+    platform_summary_df = (
+        silver_df.groupBy("platform")
+        .agg(
+            F.sum("amount").alias("platform_total_revenue"),
+            F.countDistinct("order_id").alias("platform_total_orders"),
+        )
+        .orderBy(F.desc("platform_total_revenue"))
+    )
+
+    (
+        platform_summary_df.write
+        .mode("overwrite")
+        .option("overwriteSchema", "true")
+        .saveAsTable(f"{catalog}.{schema}.gold_platform_summary")
+    )
+
+    print(f"Platform summary table written: {catalog}.{schema}.gold_platform_summary")
+    display(platform_summary_df)
