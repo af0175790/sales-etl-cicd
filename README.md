@@ -107,3 +107,4 @@ notebook or SQL editor to see the result.
   data-quality check between Silver and Gold, and fail the job on violation.
 - Add a second job resource for a different domain (e.g. a Zerodha trades
   pipeline) to show multiple resources in one bundle.
+# retry trigger
