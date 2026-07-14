@@ -3,7 +3,7 @@
 # The core cleaning logic lives in `clean_sales_df` below so it can be
 # unit-tested locally (see tests/test_silver_transformation.py) without
 # needing a real Databricks job to run.
-
+# Testing Git folder UI commit
 from pyspark.sql import DataFrame
 from pyspark.sql import functions as F
 
@@ -29,6 +29,7 @@ def clean_sales_df(df: DataFrame) -> DataFrame:
 
 
 # COMMAND ----------
+
 # The rest of this cell only runs inside an actual Databricks notebook/job.
 # It's guarded so `from silver_transformation import clean_sales_df` works
 # fine in pytest, locally, with no dbutils available.
@@ -46,7 +47,7 @@ if _IN_DATABRICKS:
     catalog = dbutils.widgets.get("catalog")
     schema = dbutils.widgets.get("schema")
 
-    # COMMAND ----------
+# COMMAND ----------
 
     bronze_df = spark.table(f"{catalog}.{schema}.bronze_sales")
     silver_df = clean_sales_df(bronze_df)
